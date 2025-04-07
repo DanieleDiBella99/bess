@@ -195,6 +195,16 @@ class CuckooMap {
 
   template <typename... Args>
   Entry* DoEmplace(const K& key, const H& hasher, const E& eq, Args&&... args) {
+    if (IsDpdk) {
+      Entry* entry1 = new Entry;
+      new (&entry1->second) V(std::forward<Args>(args)...);
+      int ret1 = rte_hash_add_key_data(hash, &key, (void*)(&entry1->second));
+      if (ret1 < 0)
+        return nullptr;
+      entry1->first = key;
+      return entry1;
+    }
+
     Entry* entry;
     HashResult primary = Hash(key, hasher);
 
@@ -301,6 +311,16 @@ class CuckooMap {
   // const version of Find()
   const Entry* Find(const K& key, const H& hasher = H(),
                     const E& eq = E()) const {
+    if (IsDpdk) {
+      Entry* ans = new Entry;
+      V* data;
+      int ret = rte_hash_lookup_data(hash, &key, (void**)&data);
+      if (ret < 0)
+        return NULL;
+      ans->first = key;
+      ans->second = *data;
+      return ans;
+    }
     EntryIndex idx = FindWithHash(Hash(key, hasher), key, eq);
     if (idx == kInvalidEntryIdx) {
       return nullptr;
