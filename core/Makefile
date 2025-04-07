@@ -67,7 +67,7 @@ HAS_PKG_CONFIG := $(shell command -v $(PKG_CONFIG) 2>&1 >/dev/null && echo yes |
 
 # We always want these libraries to be dynamically linked even when the
 # user requests a static build.
-ALWAYS_DYN_LIBS := -lpthread -ldl
+ALWAYS_DYN_LIBS := -lpthread -ldl -lssl -lcrypto
 # These libraries are not supported by pkg-config.
 ALWAYS_LIBS := -lpcap -lgflags -lnuma
 # If pkg-config is available, we just need a list of the dependecies.
@@ -77,7 +77,7 @@ NO_PKG_CONFIG_LIBS := -lglog -lgflags -lprotobuf -lgrpc++ -lunwind -lz
 # If pkg-config is not available and we're static linking, we also need
 # the indirect dependecies.  This is annoying, because they may change
 # in future versions.
-NO_PKG_CONFIG_LIBS_INDIRECT := -lgrpc -lssl -lcrypto -llzma
+NO_PKG_CONFIG_LIBS_INDIRECT := -lgrpc -llzma
 
 ifeq ($(HAS_PKG_CONFIG), yes)
   PKG_CFLAGS := $(shell $(PKG_CONFIG) --cflags $(PKG_CONFIG_DEPS))
@@ -169,6 +169,7 @@ endif
 # Unless we explicitly specify a default goal, the first target in the
 # included .mk file below will become the default goal by surprise.
 .DEFAULT_GOAL := all
+MODULE_LDFLAGS :=
 
 -include extra*.mk
 
@@ -414,7 +415,7 @@ $(eval $(call BUILD, \
         MODULE_LD, \
         %.so, \
         %.o, \
-        $(CXX) -shared -o $$@ $$^ $(LDFLAGS)))
+        $(CXX) -shared -o $$@ $$^ $(LDFLAGS) $(MODULE_LDFLAGS)))
 
 $(eval $(call BUILD, \
         MODULE_TEST_LD, \

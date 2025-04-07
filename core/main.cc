@@ -33,6 +33,7 @@
 #include <rte_launch.h>
 
 #include <glog/logging.h>
+#include <csignal>
 
 #include "bessctl.h"
 #include "bessd.h"
@@ -42,6 +43,16 @@
 #include "port.h"
 #include "utils/format.h"
 #include "version.h"
+#include "module_graph.h"
+
+static void sig_handler(int signo)
+{
+  LOG(INFO) << "Received signal: " << signo;
+  ModuleGraph::DestroyAllModules();
+  bess::event_modules.clear();
+  LOG(INFO) << "*** All modules have been destroyed ***";
+  exit(0);
+}
 
 int main(int argc, char *argv[]) {
   FLAGS_logbuflevel = -1;
@@ -88,6 +99,10 @@ int main(int argc, char *argv[]) {
   bess::PacketPool::CreateDefaultPools(FLAGS_buffers);
 
   PortBuilder::InitDrivers();
+
+  signal(SIGINT, sig_handler);
+  signal(SIGTERM, sig_handler);
+  signal(SIGKILL, sig_handler);
 
   {
     ApiServer server;

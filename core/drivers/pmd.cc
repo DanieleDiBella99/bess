@@ -541,6 +541,10 @@ restart:
 }
 
 void PMDPort::DeInit() {
+  struct rte_flow_error err;
+  memset(&err, 0, sizeof(err));
+  rte_flow_flush(dpdk_port_id_, &err);
+
   rte_eth_dev_stop(dpdk_port_id_);
 
   if (hot_plugged_) {

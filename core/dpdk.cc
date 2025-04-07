@@ -123,6 +123,8 @@ void init_eal(int dpdk_mb_per_socket, std::string nonworker_corelist) {
       "--no-shconf",
       // TODO(sangjin) switch to dynamic memory mode
       "--legacy-mem",
+      "--proc-type",
+      "auto",
   };
 
   if (FLAGS_iova != "")
