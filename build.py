@@ -304,7 +304,7 @@ def build_dpdk():
 
 
 def generate_protobuf_files():
-    grpc = cmd('which grpc_python_plugin', quiet=True).strip()
+    grpc = cmd('which grpc_python_plugin', quiet=False).strip()
 
     def gen_one_set_of_files(srcdir, outdir):
         "run protoc on *.proto in srcdir, with python output to outdir"
