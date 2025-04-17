@@ -304,7 +304,7 @@ def build_dpdk():
 
 
 def generate_protobuf_files():
-    grpc = cmd('which grpc_python_plugin', quiet=False).strip()
+    grpc = cmd('which grpc_python_plugin', quiet=True).strip()
 
     def gen_one_set_of_files(srcdir, outdir):
         "run protoc on *.proto in srcdir, with python output to outdir"
@@ -358,7 +358,7 @@ def build_bess():
     sys.stdout.flush()
     cmd('bin/bessctl daemon stop 2> /dev/null || true', shell=True)
     cmd('rm -f core/bessd')  # force relink as DPDK might have been rebuilt
-    cmd('make -C core bessd modules all_test %s' % makeflags())
+    cmd('V=1 make -C core bessd modules all_test %s' % makeflags())
 
 
 def build_kmod():
