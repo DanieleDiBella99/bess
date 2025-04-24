@@ -70,8 +70,8 @@ HAS_PKG_CONFIG := $(shell command -v $(PKG_CONFIG) 2>&1 >/dev/null && echo yes |
 ALWAYS_DYN_LIBS := -lpthread -ldl -lssl -lcrypto
 # These libraries are not supported by pkg-config.
 ALWAYS_LIBS := -lpcap -lgflags -lnuma
-# If pkg-config is available, we just need a list of the dependecies.
-PKG_CONFIG_DEPS := libdpdk libglog protobuf grpc++ libunwind zlib libcndp
+# If pkg-config is available, we just need a list of the dependecies. add "libcndp" for cndp support
+PKG_CONFIG_DEPS := libdpdk libglog protobuf grpc++ libunwind zlib
 # If pkg-config is not available, we need to list the libs we depend on.
 NO_PKG_CONFIG_LIBS := -lglog -lgflags -lprotobuf -lgrpc++ -lunwind -lz
 # If pkg-config is not available and we're static linking, we also need
