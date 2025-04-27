@@ -426,6 +426,9 @@ class ExactMatchTable {
     }
 
     if (mt_attr_name.length() > 0) {
+      if (!m) {
+        return MakeError(EINVAL, Format("idx %d: Module pointer is null", idx));
+      }
       f->attr_id = m->AddMetadataAttr(mt_attr_name, f->size,
                                       metadata::Attribute::AccessMode::kRead);
       if (f->attr_id < 0) {
