@@ -102,6 +102,10 @@ static int l2_deinit(struct l2_table *l2tbl) {
 }
 
 static uint32_t l2_ib_to_offset(struct l2_table *l2tbl, int index, int bucket) {
+  if(l2tbl->bucket == 0){
+    fprintf(stderr, "Error: l2tbl.bucket is not initialized[value= 0]\n");
+    return -1;
+  }
   return index * l2tbl->bucket + bucket;
 }
 
@@ -167,6 +171,13 @@ static inline int l2_find(struct l2_table *l2tbl, uint64_t addr,
   struct l2_entry *tbl = l2tbl->table;
 
   hash = l2_hash(addr);
+
+  // check if l2tbl->size is valid
+  if(l2tbl->size == 0){
+    fprintf(stderr, "Error: l2tbl.size is not initialized[value= 0]\n");
+    return -1;
+  }
+
   idx1 = l2_hash_to_index(hash, l2tbl->size);
 
   offset = l2_ib_to_offset(l2tbl, idx1, 0);
