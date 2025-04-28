@@ -71,7 +71,7 @@ ALWAYS_DYN_LIBS := -lpthread -ldl -lssl -lcrypto
 # These libraries are not supported by pkg-config.
 ALWAYS_LIBS := -lpcap -lgflags -lnuma
 # If pkg-config is available, we just need a list of the dependecies. add "libcndp" for cndp support
-PKG_CONFIG_DEPS := libdpdk libglog protobuf grpc++ libunwind zlib
+PKG_CONFIG_DEPS := libdpdk libglog protobuf grpc++ libunwind zlib libcap
 # If pkg-config is not available, we need to list the libs we depend on.
 NO_PKG_CONFIG_LIBS := -lglog -lgflags -lprotobuf -lgrpc++ -lunwind -lz
 # If pkg-config is not available and we're static linking, we also need
@@ -98,7 +98,7 @@ endif
 # -MMD dependency recording (should we use -MD?).
 COREDIR := $(abspath .)
 CPU ?= native
-CXXFLAGS += -std=c++17 -fPIE -g3 -ggdb3 -march=$(CPU) \
+CXXFLAGS += -std=c++17 -no-pie -g3 -ggdb3 -march=$(CPU) \
             -isystem $(COREDIR) \
             -isystem $(dir $<).. -isystem $(COREDIR)/modules \
             -D_GNU_SOURCE \
@@ -122,7 +122,7 @@ ifeq "$(shell expr $(CXXCOMPILER) = g++)" "1"
   CXXFLAGS += -fno-gnu-unique
 endif
 
-LDFLAGS += -rdynamic -pie
+LDFLAGS += -rdynamic -no-pie -L/usr/lib/x86_64-linux-gnu
 ifdef BESS_LINK_DYNAMIC
   LIBS_ALL_SHARED = -Wl,-call_shared
   LIBS_DL_SHARED =
@@ -391,7 +391,7 @@ $(eval $(call BUILD, \
         MODULE_CXX, \
         modules/%.o, \
         modules/%.cc $(PROTO_HEADERS), \
-        $(CXX) -o $$@ -c $$< $$(CXXFLAGS) $$(DEPFLAGS) -fPIC))
+        $(CXX) -o $$@ -c $$< $$(CXXFLAGS) $$(DEPFLAGS)))
 
 $(eval $(call BUILD, \
         UTILS_CXX, \
