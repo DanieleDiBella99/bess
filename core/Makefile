@@ -98,7 +98,7 @@ endif
 # -MMD dependency recording (should we use -MD?).
 COREDIR := $(abspath .)
 CPU ?= native
-CXXFLAGS += -std=c++17 -no-pie -g3 -ggdb3 -march=$(CPU) \
+CXXFLAGS += -std=c++17 -no-pie -fPIC -g3 -ggdb3 -march=$(CPU) \
             -isystem $(COREDIR) \
             -isystem $(dir $<).. -isystem $(COREDIR)/modules \
             -D_GNU_SOURCE \

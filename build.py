@@ -357,9 +357,9 @@ def build_bess():
     print('Building BESS daemon...')
     sys.stdout.flush()
     cmd('bin/bessctl daemon stop 2> /dev/null || true', shell=True)
+    os.environ['V'] = '1'
     cmd('rm -f core/bessd')  # force relink as DPDK might have been rebuilt
     cmd('make -C core bessd modules all_test %s' % makeflags())
-
 
 def build_kmod():
     check_essential()
