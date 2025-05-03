@@ -326,7 +326,7 @@ void VPort::InitDriver() {
     exec_path[ret] = '\0';
     exec_dir = dirname(exec_path);
 
-    snprintf(cmd, sizeof(cmd), "insmod %s/kmod/bess.ko", exec_dir);
+    snprintf(cmd, sizeof(cmd), "insmod /opt/bess/bessctl/kmod/bess.ko");
     ret = system(cmd);
     if (WEXITSTATUS(ret) != 0) {
       LOG(WARNING) << "Cannot load kernel module " << exec_dir
