@@ -600,19 +600,20 @@ static int sn_start_xmit(struct sk_buff *skb, struct net_device *netdev)
 	return sn_send_tx_queue(queue, dev, skb);
 }
 
-#if LINUX_VERSION_CODE < KERNEL_VERSION(3,13,0)
-static u16 sn_select_queue(struct net_device *netdev, struct sk_buff *skb)
-#elif LINUX_VERSION_CODE < KERNEL_VERSION(3,14,0) && \
-      (!defined(UTS_UBUNTU_RELEASE_ABI) || (UTS_UBUNTU_RELEASE_ABI + 0L) < 24)
-static u16 sn_select_queue(struct net_device *netdev,
-			   struct sk_buff *skb,
-			   void *accel_priv)
-#elif LINUX_VERSION_CODE < KERNEL_VERSION(4,18,0)
-static u16 sn_select_queue(struct net_device *netdev,
-			   struct sk_buff *skb,
-			   void *accel_priv,
-			   select_queue_fallback_t fallback)
-#elif LINUX_VERSION_CODE < KERNEL_VERSION(5,2,0)
+// #if LINUX_VERSION_CODE < KERNEL_VERSION(3,13,0)
+// static u16 sn_select_queue(struct net_device *netdev, struct sk_buff *skb)
+// #elif LINUX_VERSION_CODE < KERNEL_VERSION(3,14,0) && \
+//       (!defined(UTS_UBUNTU_RELEASE_ABI) || UTS_UBUNTU_RELEASE_ABI < 24)
+// static u16 sn_select_queue(struct net_device *netdev,
+// 			   struct sk_buff *skb,
+// 			   void *accel_priv)
+// #elif LINUX_VERSION_CODE < KERNEL_VERSION(4,18,0)
+// static u16 sn_select_queue(struct net_device *netdev,
+// 			   struct sk_buff *skb,
+// 			   void *accel_priv,
+// 			   select_queue_fallback_t fallback)
+// #elif
+#if LINUX_VERSION_CODE < KERNEL_VERSION(5,2,0)
 static u16 sn_select_queue(struct net_device *netdev,
 			   struct sk_buff *skb,
 			   struct net_device *sb_dev,
