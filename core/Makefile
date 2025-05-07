@@ -415,7 +415,7 @@ $(eval $(call BUILD, \
         MODULE_LD, \
         %.so, \
         %.o, \
-        $(CXX) -shared -o $$@ $$^ $(LDFLAGS) $(MODULE_LDFLAGS)))
+        $(CXX) -shared -o $$@ $$^ $(MODULE_LDFLAGS) -L/usr/lib/x86_64-linux-gnu -L/usr/local/lib -lxdp -lbpf -lelf -lzstd -lnl-3 -lpthread -fPIC))
 
 $(eval $(call BUILD, \
         MODULE_TEST_LD, \
